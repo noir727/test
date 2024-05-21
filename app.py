@@ -13,6 +13,23 @@ from linebot.exceptions import LineBotApiError
 from flask import Flask, request, abort
 
 app = Flask(__name__)
+static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
+# Channel Access Token
+line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
+# Channel Secret
+handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
+# OPENAI API Key初始化設定
+openai.api_key = os.getenv('your_ai_api_key')
+
+def GPT_response(text):
+    Chat_prompt = "this is how u modify ur ai assist, try any word to tell him what he is"
+    #ai assist are ur modify assist
+
+    response = openai.Completion.create(model="gpt-3.5-turbo-instruct", prompt=Chat_prompt+text, temperature=0.5, max_tokens=500)
+    print(response)
+  
+    answer = response['choices'][0]['text'].replace('。','')
+    return answer
 
 
 line_bot_api = LineBotApi('hxEKQbraJfAIRasBKWRGBVk/oQCs0+NpP+7ybTG017VMwcssDwWdlttOe5k48KrYywlqxFgb83r63MFvi0ekwd6nLfxhegf6R15I0BCmPYtyiZbBnBjsgVPFJCa/LZG2hZEyunnVXFm1VXo1avdrWgdB04t89/1O/w1cDnyilFU=')
